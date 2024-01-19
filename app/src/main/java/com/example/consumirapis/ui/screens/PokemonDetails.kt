@@ -33,7 +33,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModel
 import coil.compose.AsyncImage
+import com.example.consumirapis.data.models.Pokemon
+import com.example.consumirapis.data.remote.Stat
 import com.example.consumirapis.util.parseStatToAbbr
 import com.example.consumirapis.util.parseStatToColor
 import com.example.consumirapis.util.parseTypeToColor
@@ -59,9 +62,7 @@ fun PokemonDetails(
                 )
             )
     ) {
-
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-
             Card(
                 modifier = Modifier
                     .fillMaxWidth(),
@@ -70,7 +71,8 @@ fun PokemonDetails(
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween)
+                    horizontalArrangement = Arrangement.SpaceBetween
+                )
                 {
                     Row {
                         Icon(
@@ -93,7 +95,6 @@ fun PokemonDetails(
 
                     }
 
-
                     Text(
                         text = "#$id",
                         modifier = Modifier.padding(10.dp),
@@ -103,8 +104,6 @@ fun PokemonDetails(
                     )
                 }
 
-
-
                 AsyncImage(
                     model = url,
                     contentDescription = "",
@@ -112,7 +111,6 @@ fun PokemonDetails(
                         .fillMaxWidth()
                         .size(pokemonImageSize)
                         .align(Alignment.CenterHorizontally),
-
                     )
             }
 
@@ -152,88 +150,91 @@ fun PokemonDetails(
             }
 
             Spacer(modifier = Modifier.height(15.dp))
-            Row(verticalAlignment = Alignment.CenterVertically) {
 
-                Column() {
-                    pokemon?.let {
-                        Text(
-                            text = (it.height / 10f).toString() + " M",
-                            color = Color.White,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 20.sp
-                        )
-                    }
+            //Height and weight
+            DetailsHeightWeight(pokemon = pokemon)
 
-                    Spacer(modifier = Modifier.height(5.dp))
-                    Text(text = "Height", color = Color.LightGray)
-                }
-
-                Spacer(modifier = Modifier.width(50.dp))
-                Spacer(
-                    modifier = Modifier
-                        .size(2.dp, 60.dp)
-                        .background(Color.LightGray)
-                )
-                Spacer(modifier = Modifier.width(50.dp))
-                Column() {
-
-                    pokemon?.let {
-                        Text(
-                            text = (it.weight / 10f).toString() + " KG",
-                            color = Color.White,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 20.sp
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.height(5.dp))
-                    Text(text = "Weight", color = Color.LightGray)
-                }
-            }
-
-
-            Column(Modifier.padding(horizontal = 50.dp)) {
-
-                Text(
-                    text = "Base Stats",
-                    fontSize = 25.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White,
-                    modifier = Modifier
-                        .padding(12.dp)
-                        .align(Alignment.CenterHorizontally)
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-
-                pokemon?.stats?.forEach { stat ->
-
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(25.dp)
-                            .clip(CircleShape)
-                            .background(parseStatToColor(stat))
-
-                    ) {
-
-                        Row {
-                            Text(
-                                text = "${parseStatToAbbr(stat)}: ${stat.base_stat}",
-                                modifier = Modifier.padding(horizontal = 20.dp,5.dp),
-                                fontSize = 15.sp
-                            )
-                        }
-                    }
-                    Spacer(modifier = Modifier.height(10.dp))
-
-                }
-            }
-
-
+            //Base Stats
+            DetailsBaseStats(pokemon =pokemon)
         }
-
-
     }
-
 }
 
+@Composable
+fun DetailsHeightWeight(pokemon: Pokemon?) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+
+        Column() {
+            Text(
+                text = (pokemon?.height?.div(10f)).toString() + " M",
+                color = Color.White,
+                fontWeight = FontWeight.Bold,
+                fontSize = 20.sp
+            )
+
+            Spacer(modifier = Modifier.height(5.dp))
+            Text(text = "Height", color = Color.LightGray)
+        }
+
+        Spacer(modifier = Modifier.width(50.dp))
+        Spacer(
+            modifier = Modifier
+                .size(2.dp, 60.dp)
+                .background(Color.LightGray)
+        )
+        Spacer(modifier = Modifier.width(50.dp))
+        Column() {
+
+            Text(
+                text = (pokemon?.weight?.div(10f)).toString() + " KG",
+                color = Color.White,
+                fontWeight = FontWeight.Bold,
+                fontSize = 20.sp
+            )
+
+            Spacer(modifier = Modifier.height(5.dp))
+            Text(text = "Weight", color = Color.LightGray)
+        }
+
+    }
+}
+@Composable
+fun DetailsBaseStats(pokemon: Pokemon?) {
+    Column(Modifier.padding(horizontal = 50.dp)) {
+
+        Text(
+            text = "Base Stats",
+            fontSize = 25.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.White,
+            modifier = Modifier
+                .padding(12.dp)
+                .align(Alignment.CenterHorizontally)
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+
+        pokemon?.stats?.forEach { stat ->
+            baseStat(stat)
+        }
+    }
+}
+@Composable
+fun baseStat(stat: Stat) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(25.dp)
+            .clip(CircleShape)
+            .background(parseStatToColor(stat))
+    ) {
+
+        Row {
+            Text(
+                text = "${parseStatToAbbr(stat)}: ${stat.base_stat}",
+                modifier = Modifier.padding(horizontal = 20.dp, 5.dp),
+                fontSize = 15.sp
+            )
+        }
+    } 
+    Spacer(modifier = Modifier.height(10.dp))
+}

@@ -99,7 +99,7 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation ("androidx.compose.runtime:runtime-livedata:1.6.0-rc01")
-    implementation ("androidx.compose.runtime:runtime-livedata:1.1.0-alpha03")
+    implementation ("androidx.compose.runtime:runtime-livedata:1.6.0-rc01")
     //implementation("com.squareup.okhttp3:okhttp:4.12.0")
     //implementation("com.squareup.okhttp3:logging-interceptor:4.9.0")
 
@@ -118,14 +118,17 @@ dependencies {
 
     //Dagger - Hilt
 
-
     implementation("com.google.dagger:hilt-android:2.49")
     kapt("com.google.dagger:hilt-android-compiler:2.44")
     kapt("androidx.hilt:hilt-compiler:1.2.0-alpha01")
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0-alpha01")
 
-
     // Timber
     implementation("com.jakewharton.timber:timber:4.7.1")
+
+
+
+
+
 
 }
